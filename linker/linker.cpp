@@ -1341,6 +1341,7 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
             *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr - rel->r_offset;
             break;
         case R_ARM_COPY:
+<<<<<<< HEAD
             if ((si->flags & FLAG_EXE) == 0) {
                 /*
                  * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044d/IHI0044D_aaelf.pdf
@@ -1353,6 +1354,33 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
                  * We should explicitly disallow ET_DYN executables from having
                  * R_ARM_COPY relocations.
                  */
+=======
+#ifndef ENABLE_NON_PIE_SUPPORT
+            /*
+             * ET_EXEC is not supported so this should not happen.
+             *
+             * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044d/IHI0044D_aaelf.pdf
+             *
+             * Section 4.7.1.10 "Dynamic relocations"
+             * R_ARM_COPY may only appear in executable objects where e_type is
+             * set to ET_EXEC.
+             */
+            DL_ERR("%s R_ARM_COPY relocations are not supported", si->name);
+            return -1;
+#else
+            if ((si->flags & FLAG_EXE) == 0) {
+                /*
+                * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044d/IHI0044D_aaelf.pdf
+                *
+                * Section 4.7.1.10 "Dynamic relocations"
+                * R_ARM_COPY may only appear in executable objects where e_type is
+                * set to ET_EXEC.
+                *
+                * TODO: FLAG_EXE is set for both ET_DYN and ET_EXEC executables.
+                * We should explicitly disallow ET_DYN executables from having
+                * R_ARM_COPY relocations.
+                */
+>>>>>>> upstream/android-5.0
                 DL_ERR("%s R_ARM_COPY relocations only supported for ET_EXEC", si->name);
                 return -1;
             }
@@ -1383,6 +1411,10 @@ static int soinfo_relocate(soinfo* si, ElfW(Rel)* rel, unsigned count, soinfo* n
                 return -1;
             }
             break;
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> upstream/android-5.0
 #elif defined(__i386__)
         case R_386_JMP_SLOT:
             count_relocation(kRelocAbsolute);
@@ -2244,7 +2276,11 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args, ElfW(
     si->dynamic = NULL;
     si->ref_count = 1;
 
+<<<<<<< HEAD
 #if defined(__LP64__)
+=======
+#ifndef ENABLE_NON_PIE_SUPPORT
+>>>>>>> upstream/android-5.0
     ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
     if (elf_hdr->e_type != ET_DYN) {
         __libc_format_fd(2, "error: only position independent executables (PIE) are supported.\n");
