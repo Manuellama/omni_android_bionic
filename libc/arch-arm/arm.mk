@@ -19,7 +19,7 @@ libc_common_src_files_arm += \
 endif
 
 libc_common_src_files_arm += \
-	bionic/memrchr.c \
+	bionic/memrchr.c \ #it looks like memchr but it's memRchr
     bionic/strchr.cpp \
     bionic/strnlen.c \
     bionic/strrchr.cpp \
