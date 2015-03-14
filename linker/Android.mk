@@ -8,6 +8,7 @@ LOCAL_SRC_FILES:= \
     linker.cpp \
     linker_allocator.cpp \
     linker_environ.cpp \
+    linker_libc_support.c \
     linker_phdr.cpp \
     rt.cpp \
 
@@ -35,12 +36,12 @@ LOCAL_CONLYFLAGS += \
 LOCAL_CPPFLAGS += \
     -std=gnu++11 \
 
-ifeq ($(TARGET_ENABLE_NON_PIE_SUPPORT),true)
-    LOCAL_CFLAGS += -DENABLE_NON_PIE_SUPPORT
-endif
-
 ifeq ($(TARGET_NEEDS_BIONIC_PRELINK_SUPPORT),true)
     LOCAL_CFLAGS += -DENABLE_PRELINK_SUPPORT
+endif
+
+ifeq ($(TARGET_ENABLE_NON_PIE_SUPPORT),true)
+    LOCAL_CFLAGS += -DENABLE_NON_PIE_SUPPORT
 endif
 
 # We need to access Bionic private headers in the linker.
