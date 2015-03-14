@@ -44,6 +44,13 @@ libc_freebsd_src_files_arm += \
     upstream-freebsd/lib/libc/string/wmemcmp.c \
     upstream-freebsd/lib/libc/string/wmemmove.c \
 
+ifeq ($(TARGET_CPU_VARIANT),tegra2)
+libc_openbsd_src_files_arm += \
+    upstream-openbsd/lib/libc/string/stpcpy.c \
+
+endif
+
+
 libc_openbsd_src_files_arm += \
     upstream-openbsd/lib/libc/string/bcopy.c \
     upstream-openbsd/lib/libc/string/stpncpy.c \
